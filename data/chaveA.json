@@ -1,0 +1,1172 @@
+[
+  {
+    "id": "A1",
+    "numero_original": 1,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores aclamídeas",
+    "destino_a": "A2",
+    "texto_b": "Flores monoclamídeas",
+    "destino_b": "A12"
+  },
+  {
+    "id": "A2",
+    "numero_original": 2,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas opostas ou verticiladas",
+    "destino_a": "A3",
+    "texto_b": "Folhas alternas ou ausentes",
+    "destino_b": "A5"
+  },
+  {
+    "id": "A3",
+    "numero_original": 3,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas escamiformes",
+    "destino_a": "Casuarinaceae",
+    "texto_b": "Folhas não escamiformes",
+    "destino_b": "A4"
+  },
+  {
+    "id": "A4",
+    "numero_original": 4,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas em geral com látex; ovário trilocular; fruto geralmente com deiscência explosiva (tricoca)",
+    "destino_a": "Euphorbiaceae",
+    "texto_b": "Plantas sem látex; ovário unilocular; fruto indeiscente",
+    "destino_b": "Piperaceae"
+  },
+  {
+    "id": "A5",
+    "numero_original": 5,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Inflorescência do tipo espádice",
+    "destino_a": "Araceae",
+    "texto_b": "Inflorescência de outros tipos",
+    "destino_b": "A6"
+  },
+  {
+    "id": "A6",
+    "numero_original": 6,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas paralelinérveas",
+    "destino_a": "A7",
+    "texto_b": "Folhas peninérveas ou palminérveas",
+    "destino_b": "A9"
+  },
+  {
+    "id": "A7",
+    "numero_original": 7,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores não envolvidas por brácteas, dispostas em espigas",
+    "destino_a": "Typhaceae",
+    "texto_b": "Flores envolvidas por brácteas, dispostas em espiguetas",
+    "destino_b": "A8"
+  },
+  {
+    "id": "A8",
+    "numero_original": 8,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Caule geralmente de seção triangular; folhas alternas espiraladas, com bainha geralmente fechada; fruto aquênio",
+    "destino_a": "Cyperaceae",
+    "texto_b": "Caule geralmente de seção circular ou achatado; folhas alternas dísticas ou muito raramente espiraladas, com bainha geralmente aberta; fruto cariopse",
+    "destino_b": "Poaceae (Gramineae)"
+  },
+  {
+    "id": "A9",
+    "numero_original": 9,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com látex",
+    "destino_a": "A10",
+    "texto_b": "Plantas sem látex",
+    "destino_b": "A11"
+  },
+  {
+    "id": "A10",
+    "numero_original": 10,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Estípulas laterais; ovário com dois a três lóculos",
+    "destino_a": "Euphorbiaceae",
+    "texto_b": "Estípulas terminais; ovário unilocular",
+    "destino_b": "Moraceae"
+  },
+  {
+    "id": "A11",
+    "numero_original": 11,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores geralmente sésseis e dispostas em espigas; ovário com um único óvulo",
+    "destino_a": "Piperaceae",
+    "texto_b": "Flores geralmente pediceladas e dispostas em outros tipos de inflorescências; ovário com dois a muitos óvulos",
+    "destino_b": "Salicaceae"
+  },
+  {
+    "id": "A12",
+    "numero_original": 12,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores unissexuadas ou poligâmicas",
+    "destino_a": "A13",
+    "texto_b": "Flores bissexuadas",
+    "destino_b": "A59"
+  },
+  {
+    "id": "A13",
+    "numero_original": 13,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas opostas ou verticiladas",
+    "destino_a": "A14",
+    "texto_b": "Folhas alternas ou plantas afilas",
+    "destino_b": "A30"
+  },
+  {
+    "id": "A14",
+    "numero_original": 14,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário ínfero",
+    "destino_a": "A15",
+    "texto_b": "Ovário súpero",
+    "destino_b": "A17"
+  },
+  {
+    "id": "A15",
+    "numero_original": 15,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário 2-5-locular",
+    "destino_a": "Rubiaceae",
+    "texto_b": "Ovário unilocular",
+    "destino_b": "A16"
+  },
+  {
+    "id": "A16",
+    "numero_original": 16,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores dispostas em inflorescências do tipo capítulo",
+    "destino_a": "Asteraceae (Compositae)",
+    "texto_b": "Flores solitárias ou dispostas em outros tipos de inflorescência",
+    "destino_b": "Santalaceae"
+  },
+  {
+    "id": "A17",
+    "numero_original": 17,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Estames em número igual ou maior ao das sépalas",
+    "destino_a": "A18",
+    "texto_b": "Estames em número menor do que as sépalas",
+    "destino_b": "A27"
+  },
+  {
+    "id": "A18",
+    "numero_original": 18,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário unilocular (às vezes por aborto)",
+    "destino_a": "A19",
+    "texto_b": "Ovário bi-plurilocular",
+    "destino_b": "A25"
+  },
+  {
+    "id": "A19",
+    "numero_original": 19,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Gineceu unicarpelar (ou com dois carpelos, mas um deles extremamente reduzido)",
+    "destino_a": "A20",
+    "texto_b": "Gineceu bi-pluricarpelar",
+    "destino_b": "A22"
+  },
+  {
+    "id": "A20",
+    "numero_original": 20,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com estípulas",
+    "destino_a": "Urticaceae",
+    "texto_b": "Plantas sem estípulas",
+    "destino_b": "A21"
+  },
+  {
+    "id": "A21",
+    "numero_original": 21,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Cálice dialissépalo",
+    "destino_a": "Calophyllaceae",
+    "texto_b": "Cálice gamossépalo",
+    "destino_b": "Nyctaginaceae"
+  },
+  {
+    "id": "A22",
+    "numero_original": 22,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário com dois a muitos óvulos",
+    "destino_a": "Rubiaceae",
+    "texto_b": "Ovário com um único óvulo",
+    "destino_b": "A23"
+  },
+  {
+    "id": "A23",
+    "numero_original": 23,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ervas",
+    "destino_a": "Amaranthaceae",
+    "texto_b": "Arbustos ou árvores",
+    "destino_b": "A24"
+  },
+  {
+    "id": "A24",
+    "numero_original": 24,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Óvulo com placentação pêndula",
+    "destino_a": "Moraceae",
+    "texto_b": "Óvulo com placentação ereta",
+    "destino_b": "Calophyllaceae"
+  },
+  {
+    "id": "A25",
+    "numero_original": 25,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Lóculos com dois a muitos óvulos",
+    "destino_a": "Sapindaceae",
+    "texto_b": "Lóculos com um único óvulo",
+    "destino_b": "A26"
+  },
+  {
+    "id": "A26",
+    "numero_original": 26,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Óvulos com placentação ereta ou pêndula",
+    "destino_a": "Moraceae",
+    "texto_b": "Óvulos com placentação parietal ou axial",
+    "destino_b": "Euphorbiaceae"
+  },
+  {
+    "id": "A27",
+    "numero_original": 27,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas compostas",
+    "destino_a": "Oleaceae",
+    "texto_b": "Folhas simples",
+    "destino_b": "A28"
+  },
+  {
+    "id": "A28",
+    "numero_original": 28,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flor com dois ou mais pistilos",
+    "destino_a": "Siparunaceae",
+    "texto_b": "Flor com um único pistilo",
+    "destino_b": "A29"
+  },
+  {
+    "id": "A29",
+    "numero_original": 29,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com látex; folhas opostas, não escamiformes",
+    "destino_a": "Moraceae",
+    "texto_b": "Plantas sem látex; folhas verticiladas, escamiformes",
+    "destino_b": "Casuarinaceae"
+  },
+  {
+    "id": "A30",
+    "numero_original": 30,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário ínfero",
+    "destino_a": "A31",
+    "texto_b": "Ovário súpero",
+    "destino_b": "A38"
+  },
+  {
+    "id": "A31",
+    "numero_original": 31,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas hemiparasitas",
+    "destino_a": "Santalaceae",
+    "texto_b": "Plantas não hemiparasitas",
+    "destino_b": "A32"
+  },
+  {
+    "id": "A32",
+    "numero_original": 32,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário unilocular",
+    "destino_a": "A33",
+    "texto_b": "Ovário bi-plurilocular, ao menos na região mediana do ovário",
+    "destino_b": "A36"
+  },
+  {
+    "id": "A33",
+    "numero_original": 33,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário com um único óvulo",
+    "destino_a": "A34",
+    "texto_b": "Ovário bi-pluriovulado",
+    "destino_b": "A35"
+  },
+  {
+    "id": "A34",
+    "numero_original": 34,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores dispostas em capítulos",
+    "destino_a": "Asteraceae (Compositae)",
+    "texto_b": "Flores dispostas em inflorescências de outros tipos",
+    "destino_b": "Moraceae"
+  },
+  {
+    "id": "A35",
+    "numero_original": 35,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Sépalas numerosas; folhas geralmente transformadas em espinhos",
+    "destino_a": "Cactaceae",
+    "texto_b": "Sépalas 2-9; folhas não transformadas em espinhos",
+    "destino_b": "Combretaceae"
+  },
+  {
+    "id": "A36",
+    "numero_original": 36,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Lóculos do ovário com um único óvulo",
+    "destino_a": "Phytolaccaceae",
+    "texto_b": "Lóculos do ovário com dois a muitos óvulos",
+    "destino_b": "A37"
+  },
+  {
+    "id": "A37",
+    "numero_original": 37,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas herbáceas",
+    "destino_a": "Begoniaceae",
+    "texto_b": "Plantas lenhosas",
+    "destino_b": "Fagaceae"
+  },
+  {
+    "id": "A38",
+    "numero_original": 38,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Gineceu bi-pluricarpelar",
+    "destino_a": "A39",
+    "texto_b": "Gineceu unicarpelar (ou bicarpelar com um dos carpelos extremamente reduzido)",
+    "destino_b": "A56"
+  },
+  {
+    "id": "A39",
+    "numero_original": 39,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário unilocular ou com um carpelo fértil e os demais estéreis",
+    "destino_a": "A40",
+    "texto_b": "Ovário bi-plurilocular",
+    "destino_b": "A49"
+  },
+  {
+    "id": "A40",
+    "numero_original": 40,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Inflorescência do tipo espádice",
+    "destino_a": "Araceae (Palmae)",
+    "texto_b": "Inflorescência de outros tipos",
+    "destino_b": "A41"
+  },
+  {
+    "id": "A41",
+    "numero_original": 41,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário com um único óvulo",
+    "destino_a": "A42",
+    "texto_b": "Ovário bi-pluriovulado",
+    "destino_b": "A48"
+  },
+  {
+    "id": "A42",
+    "numero_original": 42,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas com bainha",
+    "destino_a": "A43",
+    "texto_b": "Folhas sem bainha",
+    "destino_b": "A44"
+  },
+  {
+    "id": "A43",
+    "numero_original": 43,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas alternas dísticas; flores dispostas em espigas; óvulo com placentação pêndula",
+    "destino_a": "Typhaceae",
+    "texto_b": "Folhas alternas espiraladas; flores dispostas em espiguetas; óvulo com placentação ereta",
+    "destino_b": "Cyperaceae"
+  },
+  {
+    "id": "A44",
+    "numero_original": 44,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com látex",
+    "destino_a": "Moraceae",
+    "texto_b": "Plantas sem látex",
+    "destino_b": "A45"
+  },
+  {
+    "id": "A45",
+    "numero_original": 45,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas com ócrea",
+    "destino_a": "Polygonaceae",
+    "texto_b": "Folhas sem ócrea",
+    "destino_b": "A46"
+  },
+  {
+    "id": "A46",
+    "numero_original": 46,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Estípulas ausentes",
+    "destino_a": "Amaranthaceae",
+    "texto_b": "Estípulas presentes",
+    "destino_b": "A47"
+  },
+  {
+    "id": "A47",
+    "numero_original": 47,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Óvulos com placentação ereta",
+    "destino_a": "Urticaceae",
+    "texto_b": "Óvulos com placentação pêndula",
+    "destino_b": "Cannabaceae"
+  },
+  {
+    "id": "A48",
+    "numero_original": 48,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Placentação ereta ou pêndula",
+    "destino_a": "Amaranthaceae",
+    "texto_b": "Placentação central-livre ou parietal",
+    "destino_b": "Salicaceae"
+  },
+  {
+    "id": "A49",
+    "numero_original": 49,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Inflorescência do tipo espádice",
+    "destino_a": "A50",
+    "texto_b": "Inflorescência de outros tipos",
+    "destino_b": "A51"
+  },
+  {
+    "id": "A50",
+    "numero_original": 50,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ervas; espádice simples",
+    "destino_a": "Araceae",
+    "texto_b": "Palmeiras (geralmente lenhosas); espádice composto",
+    "destino_b": "Arecaceae (Palmae)"
+  },
+  {
+    "id": "A51",
+    "numero_original": 51,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas com bainha",
+    "destino_a": "Typhaceae",
+    "texto_b": "Folhas sem bainha",
+    "destino_b": "A52"
+  },
+  {
+    "id": "A52",
+    "numero_original": 52,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Lóculos do ovário com um único óvulo",
+    "destino_a": "A53",
+    "texto_b": "Lóculos do ovário com mais de um óvulo",
+    "destino_b": "A54"
+  },
+  {
+    "id": "A53",
+    "numero_original": 53,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário penta-plurilocular",
+    "destino_a": "Phytolaccaceae",
+    "texto_b": "Ovário bi-trilocular",
+    "destino_b": "Euphorbiaceae"
+  },
+  {
+    "id": "A54",
+    "numero_original": 54,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Lóculos do ovário tri-pluriovulados",
+    "destino_a": "Malvaceae",
+    "texto_b": "Lóculos do ovário biovulados",
+    "destino_b": "A58"
+  },
+  {
+    "id": "A55",
+    "numero_original": 55,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com estípulas",
+    "destino_a": "Phyllanthaceae",
+    "texto_b": "Plantas sem estípulas",
+    "destino_b": "Sapindaceae"
+  },
+  {
+    "id": "A56",
+    "numero_original": 56,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas não lenhosas",
+    "destino_a": "Urticaceae",
+    "texto_b": "Plantas lenhosas",
+    "destino_b": "A57"
+  },
+  {
+    "id": "A57",
+    "numero_original": 57,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com látex",
+    "destino_a": "Moraceae",
+    "texto_b": "Plantas sem látex",
+    "destino_b": "A58"
+  },
+  {
+    "id": "A58",
+    "numero_original": 58,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com estípulas",
+    "destino_a": "Urticaceae",
+    "texto_b": "Plantas sem estípulas",
+    "destino_b": "Nyctaginaceae"
+  },
+  {
+    "id": "A59",
+    "numero_original": 59,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário ínfero",
+    "destino_a": "A60",
+    "texto_b": "Ovário súpero",
+    "destino_b": "A75"
+  },
+  {
+    "id": "A60",
+    "numero_original": 60,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário unilocular",
+    "destino_a": "A61",
+    "texto_b": "Ovário bi-plurilocular",
+    "destino_b": "A68"
+  },
+  {
+    "id": "A61",
+    "numero_original": 61,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores dispostas em capítulos",
+    "destino_a": "Asteraceae (Compositae)",
+    "texto_b": "Flores solitárias ou dispostas em outros tipos de inflorescência",
+    "destino_b": "A62"
+  },
+  {
+    "id": "A62",
+    "numero_original": 62,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores zigomorfas",
+    "destino_a": "Cactaceae",
+    "texto_b": "Flores actinomorfas",
+    "destino_b": "A63"
+  },
+  {
+    "id": "A63",
+    "numero_original": 63,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Óvulos com placentação central-livre",
+    "destino_a": "Portulacaceae",
+    "texto_b": "Óvulos com placentação pêndula, ereta ou parietal",
+    "destino_b": "A64"
+  },
+  {
+    "id": "A64",
+    "numero_original": 64,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Óvulos com placentação pêndula",
+    "destino_a": "A65",
+    "texto_b": "Óvulos com placentação ereta ou parietal",
+    "destino_b": "A67"
+  },
+  {
+    "id": "A65",
+    "numero_original": 65,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Gineceu unicarpelar",
+    "destino_a": "Combretaceae",
+    "texto_b": "Gineceu 2-5-carpelar",
+    "destino_b": "A66"
+  },
+  {
+    "id": "A66",
+    "numero_original": 66,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas herbáceas ou subarbustivas, hemiparasitas",
+    "destino_a": "Santalaceae",
+    "texto_b": "Plantas autótrofas, lenhosas",
+    "destino_b": "Combretaceae"
+  },
+  {
+    "id": "A67",
+    "numero_original": 67,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Sépalas numerosas; folhas geralmente transformadas em espinhos",
+    "destino_a": "Cactaceae",
+    "texto_b": "Sépalas 2-6; folhas não transformadas em espinhos",
+    "destino_b": "Portulacaceae"
+  },
+  {
+    "id": "A68",
+    "numero_original": 68,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com estípulas interpeciolares",
+    "destino_a": "Rubiaceae",
+    "texto_b": "Plantas sem estípulas ou com estípulas não interpeciolares",
+    "destino_b": "A69"
+  },
+  {
+    "id": "A69",
+    "numero_original": 69,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores zigomorfas",
+    "destino_a": "Aristolochiaceae",
+    "texto_b": "Flores actinomorfas",
+    "destino_b": "A70"
+  },
+  {
+    "id": "A70",
+    "numero_original": 70,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Estames em número igual ou duplo ao das sépalas",
+    "destino_a": "A71",
+    "texto_b": "Estames numerosos",
+    "destino_b": "A74"
+  },
+  {
+    "id": "A71",
+    "numero_original": 71,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas lenhosas",
+    "destino_a": "Araliaceae",
+    "texto_b": "Plantas herbáceas",
+    "destino_b": "A72"
+  },
+  {
+    "id": "A72",
+    "numero_original": 72,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas compostas ou sectas",
+    "destino_a": "Apiaceae (Umbelliferae)",
+    "texto_b": "Folhas simples, inteiras",
+    "destino_b": "A73"
+  },
+  {
+    "id": "A73",
+    "numero_original": 73,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores pediceladas",
+    "destino_a": "Araliaceae",
+    "texto_b": "Flores sésseis",
+    "destino_b": "Apiaceae (Umbelliferae)"
+  },
+  {
+    "id": "A74",
+    "numero_original": 74,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Lianas",
+    "destino_a": "Phytolaccaceae",
+    "texto_b": "Arbustos ou árvores",
+    "destino_b": "Myrtaceae"
+  },
+  {
+    "id": "A75",
+    "numero_original": 75,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flor com dois ou mais pistilos",
+    "destino_a": "A76",
+    "texto_b": "Flor com um único pistilo",
+    "destino_b": "A78"
+  },
+  {
+    "id": "A76",
+    "numero_original": 76,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas sem estípulas",
+    "destino_a": "Phytolaccaceae",
+    "texto_b": "Plantas com estípulas",
+    "destino_b": "A77"
+  },
+  {
+    "id": "A77",
+    "numero_original": 77,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Estípulas laterais",
+    "destino_a": "Rosaceae",
+    "texto_b": "Estípulas terminais",
+    "destino_b": "Magnoliaceae"
+  },
+  {
+    "id": "A78",
+    "numero_original": 78,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário unilocular",
+    "destino_a": "A79",
+    "texto_b": "Ovário bi-plurilocular",
+    "destino_b": "A107"
+  },
+  {
+    "id": "A79",
+    "numero_original": 79,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ovário bi-pluriovulado",
+    "destino_a": "A80",
+    "texto_b": "Ovário com um único óvulo",
+    "destino_b": "A96"
+  },
+  {
+    "id": "A80",
+    "numero_original": 80,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Inflorescência do tipo espádice",
+    "destino_a": "Araceae",
+    "texto_b": "Inflorescência de outros tipos",
+    "destino_b": "A81"
+  },
+  {
+    "id": "A81",
+    "numero_original": 81,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas compostas bi-plurifolioladas ou pinatissectas",
+    "destino_a": "A82",
+    "texto_b": "Folhas simples, não pinatissectas, ou compostas unifolioladas",
+    "destino_b": "A85"
+  },
+  {
+    "id": "A82",
+    "numero_original": 82,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Gineceu bi-pluricarpelar",
+    "destino_a": "Rosaceae",
+    "texto_b": "Gineceu unicarpelar",
+    "destino_b": "A83"
+  },
+  {
+    "id": "A83",
+    "numero_original": 83,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas sem estípulas",
+    "destino_a": "Proteaceae",
+    "texto_b": "Plantas com estípulas",
+    "destino_b": "A84"
+  },
+  {
+    "id": "A84",
+    "numero_original": 84,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Estames 8-12",
+    "destino_a": "Fabaceae (Leguminosae)",
+    "texto_b": "Estames 3-5",
+    "destino_b": "Rosaceae"
+  },
+  {
+    "id": "A85",
+    "numero_original": 85,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Óvulos com placentação central-livre",
+    "destino_a": "A86",
+    "texto_b": "Óvulos com placentação ereta, marginal, pêndula ou parietal",
+    "destino_b": "A88"
+  },
+  {
+    "id": "A86",
+    "numero_original": 86,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores períginas",
+    "destino_a": "Lythraceae",
+    "texto_b": "Flores hipógenas",
+    "destino_b": "A87"
+  },
+  {
+    "id": "A87",
+    "numero_original": 87,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas carnosas, alternas a opostas na mesma planta",
+    "destino_a": "Talinaceae",
+    "texto_b": "Folhas não carnosas; todas opostas",
+    "destino_b": "Caryophyllaceae"
+  },
+  {
+    "id": "A88",
+    "numero_original": 88,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Óvulos com placentação parietal ou marginal",
+    "destino_a": "A89",
+    "texto_b": "Óvulos com placentação ereta ou pêndula",
+    "destino_b": "A94"
+  },
+  {
+    "id": "A89",
+    "numero_original": 89,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Sépalas numerosas",
+    "destino_a": "Cactaceae",
+    "texto_b": "Sépalas 1-12",
+    "destino_b": "A90"
+  },
+  {
+    "id": "A90",
+    "numero_original": 90,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Gineceu unicarpelar",
+    "destino_a": "A91",
+    "texto_b": "Gineceu 2-18-carpelar",
+    "destino_b": "A92"
+  },
+  {
+    "id": "A91",
+    "numero_original": 91,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas simples",
+    "destino_a": "Proteaceae",
+    "texto_b": "Folhas compostas unifolioladas",
+    "destino_b": "Fabaceae (Leguminosae)"
+  },
+  {
+    "id": "A92",
+    "numero_original": 92,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas geralmente trepadeiras, flores geralmente com androginóforo",
+    "destino_a": "Passifloraceae",
+    "texto_b": "Plantas não trepadeiras, sem androginóforo",
+    "destino_b": "A93"
+  },
+  {
+    "id": "A93",
+    "numero_original": 93,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ervas (na realidade diclamídeas)",
+    "destino_a": "Papaveraceae",
+    "texto_b": "Arbustos ou árvores",
+    "destino_b": "Salicaceae"
+  },
+  {
+    "id": "A94",
+    "numero_original": 94,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Óvulos com placentação pêndula",
+    "destino_a": "Proteaceae",
+    "texto_b": "Óvulos com placentação ereta",
+    "destino_b": "A95"
+  },
+  {
+    "id": "A95",
+    "numero_original": 95,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores escariosas; gineceu bicarpelar",
+    "destino_a": "Amaranthaceae",
+    "texto_b": "Flores não escariosas; gineceu tricarpelar",
+    "destino_b": "Portulacaceae"
+  },
+  {
+    "id": "A96",
+    "numero_original": 96,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Inflorescência do tipo espádice",
+    "destino_a": "Araceae",
+    "texto_b": "Inflorescência de outros tipos",
+    "destino_b": "A97"
+  },
+  {
+    "id": "A97",
+    "numero_original": 97,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com estípulas, às vezes transformadas em ócrea ou em espinhos",
+    "destino_a": "A98",
+    "texto_b": "Plantas sem estípulas",
+    "destino_b": "A103"
+  },
+  {
+    "id": "A98",
+    "numero_original": 98,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com ócrea",
+    "destino_a": "Polygonaceae",
+    "texto_b": "Plantas sem ócrea",
+    "destino_b": "A99"
+  },
+  {
+    "id": "A99",
+    "numero_original": 99,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Estames 1-9",
+    "destino_a": "A100",
+    "texto_b": "Estames 10-numerosos",
+    "destino_b": "A102"
+  },
+  {
+    "id": "A100",
+    "numero_original": 100,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas compostas",
+    "destino_a": "Rosaceae",
+    "texto_b": "Folhas simples",
+    "destino_b": "A101"
+  },
+  {
+    "id": "A101",
+    "numero_original": 101,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores bissexuadas",
+    "destino_a": "Phytolaccaceae",
+    "texto_b": "Flores unissexuadas",
+    "destino_b": "Urticaceae"
+  },
+  {
+    "id": "A102",
+    "numero_original": 102,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas compostas",
+    "destino_a": "Fabaceae (Leguminosae)",
+    "texto_b": "Folhas simples",
+    "destino_b": "Phytolaccaceae"
+  },
+  {
+    "id": "A103",
+    "numero_original": 103,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com látex",
+    "destino_a": "Calophyllaceae",
+    "texto_b": "Plantas sem látex",
+    "destino_b": "A104"
+  },
+  {
+    "id": "A104",
+    "numero_original": 104,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Brácteas escariosas, cálice não petaloide",
+    "destino_a": "Amaranthaceae",
+    "texto_b": "Brácteas não escariosas; cálice petaloide",
+    "destino_b": "A105"
+  },
+  {
+    "id": "A105",
+    "numero_original": 105,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Cálice dialissépalo",
+    "destino_a": "Phytolaccaceae",
+    "texto_b": "Cálice gamossépalo",
+    "destino_b": "A106"
+  },
+  {
+    "id": "A106",
+    "numero_original": 106,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Cálice unido apenas na base",
+    "destino_a": "Polygonaceae",
+    "texto_b": "Cálice unido na maior parte de sua extensão, formando um tubo longo",
+    "destino_b": "Nyctaginaceae"
+  },
+  {
+    "id": "A107",
+    "numero_original": 107,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Inflorescência do tipo espádice",
+    "destino_a": "A108",
+    "texto_b": "Inflorescência de outros tipos",
+    "destino_b": "A109"
+  },
+  {
+    "id": "A108",
+    "numero_original": 108,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Ervas; espádice simples",
+    "destino_a": "Araceae",
+    "texto_b": "Palmeiras (geralmente lenhosas); espádice composto",
+    "destino_b": "Arecaceae (Palmae)"
+  },
+  {
+    "id": "A109",
+    "numero_original": 109,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Estame 1",
+    "destino_a": "Lythraceae",
+    "texto_b": "Estames 2-numerosos",
+    "destino_b": "A110"
+  },
+  {
+    "id": "A110",
+    "numero_original": 110,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Lóculos do ovário uni-bivulados",
+    "destino_a": "A111",
+    "texto_b": "Lóculos do ovário tri-pluriovulados",
+    "destino_b": "A116"
+  },
+  {
+    "id": "A111",
+    "numero_original": 111,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Folhas compostas",
+    "destino_a": "Sapindaceae",
+    "texto_b": "Folhas simples ou compostas unifolioladas",
+    "destino_b": "A112"
+  },
+  {
+    "id": "A112",
+    "numero_original": 112,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Lóculos do ovário biovulados",
+    "destino_a": "A113",
+    "texto_b": "Lóculos do ovário com um único óvulo",
+    "destino_b": "A114"
+  },
+  {
+    "id": "A113",
+    "numero_original": 113,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas com estípulas",
+    "destino_a": "Malvaceae",
+    "texto_b": "Plantas sem estípulas",
+    "destino_b": "Sapindaceae"
+  },
+  {
+    "id": "A114",
+    "numero_original": 114,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Carpelos 4-numerosos",
+    "destino_a": "Phytolaccaceae",
+    "texto_b": "Carpelos 2-3",
+    "destino_b": "A115"
+  },
+  {
+    "id": "A115",
+    "numero_original": 115,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Óvulo com placentação pêndula",
+    "destino_a": "Ulmaceae",
+    "texto_b": "Óvulo com placentação ereta",
+    "destino_b": "Rhamnaceae"
+  },
+  {
+    "id": "A116",
+    "numero_original": 116,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Plantas lenhosas",
+    "destino_a": "Malvaceae",
+    "texto_b": "Plantas herbáceas",
+    "destino_b": "A117"
+  },
+  {
+    "id": "A117",
+    "numero_original": 117,
+    "chave": "A",
+    "tipo": "decisao",
+    "texto_a": "Flores períginas",
+    "destino_a": "Lythraceae",
+    "texto_b": "Flores hipóginas",
+    "destino_b": "Acanthaceae"
+  }
+]

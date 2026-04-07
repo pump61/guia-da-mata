@@ -1,0 +1,105 @@
+{
+  "chave": "D",
+  "itens": [
+    {
+      "id": "D1",
+      "numero_original": 1,
+      "chave": "D",
+      "tipo": "decisao",
+      "texto_a": "Folhas pinadas ou pinatissectas",
+      "destino_a": "D2",
+      "texto_b": "Folhas simples e inteiras",
+      "destino_b": "D3"
+    },
+    {
+      "id": "D2",
+      "numero_original": 2,
+      "chave": "D",
+      "tipo": "decisao",
+      "texto_a": "Folíolos sem nervura central evidente; megasporofilos dispostos em megastróbilos",
+      "destino_a": "Zamiaceae",
+      "texto_b": "Folíolos com nervura central evidente; megasporofilos não dispostos em megastróbilos",
+      "destino_b": "Cycadaceae"
+    },
+    {
+      "id": "D3",
+      "numero_original": 3,
+      "chave": "D",
+      "tipo": "decisao",
+      "texto_a": "Folhas flabeliformes",
+      "destino_a": "Ginkgoaceae",
+      "texto_b": "Folhas não flabeliformes",
+      "destino_b": "D4"
+    },
+    {
+      "id": "D4",
+      "numero_original": 4,
+      "chave": "D",
+      "tipo": "decisao",
+      "texto_a": "Plantas herbáceas, com folhas opostas ou verticiladas, escamiformes",
+      "destino_a": "Ephedraceae",
+      "texto_b": "Plantas lenhosas, com folhas alternas ou, se opostas, não escamiformes",
+      "destino_b": "D5"
+    },
+    {
+      "id": "D5",
+      "numero_original": 5,
+      "chave": "D",
+      "tipo": "decisao",
+      "texto_a": "Folhas peninérveas",
+      "destino_a": "Gnetaceae",
+      "texto_b": "Folhas uninérveas ou paralelinérveas",
+      "destino_b": "D6"
+    },
+    {
+      "id": "D6",
+      "numero_original": 6,
+      "chave": "D",
+      "tipo": "decisao",
+      "texto_a": "Folhas dispostas em ramos curtos (braquiblastos)",
+      "destino_a": "Pinaceae",
+      "texto_b": "Folhas não dispostas em braquiblastos",
+      "destino_b": "D7"
+    },
+    {
+      "id": "D7",
+      "numero_original": 7,
+      "chave": "D",
+      "tipo": "decisao",
+      "texto_a": "Megastróbilos ausentes ou pouco definidos",
+      "destino_a": "D8",
+      "texto_b": "Megastróbilos bem definidos",
+      "destino_b": "D9"
+    },
+    {
+      "id": "D8",
+      "numero_original": 8,
+      "chave": "D",
+      "tipo": "decisao",
+      "texto_a": "Microsporófilos com 2 microsporângios; grãos de pólen com vesículas de ar; sementes sustentadas por receptáculo carnoso",
+      "destino_a": "Podocarpaceae",
+      "texto_b": "Microsporófilos com 2-9 microsporângios; grãos de pólen sem vesículas de ar; sementes não sustentadas por receptáculo carnoso",
+      "destino_b": "Taxaceae"
+    },
+    {
+      "id": "D9",
+      "numero_original": 9,
+      "chave": "D",
+      "tipo": "decisao",
+      "texto_a": "Folhas com mais de 2 cm de largura",
+      "destino_a": "Araucariaceae",
+      "texto_b": "Folhas com menos de 2 cm de largura",
+      "destino_b": "D10"
+    },
+    {
+      "id": "D10",
+      "numero_original": 10,
+      "chave": "D",
+      "tipo": "decisao",
+      "texto_a": "Megastróbilos com mais de 10 cm de comprimento",
+      "destino_a": "Araucariaceae",
+      "texto_b": "Megastróbilos com menos de 10 cm de comprimento",
+      "destino_b": "Cupressaceae"
+    }
+  ]
+}
