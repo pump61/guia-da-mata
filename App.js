@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Alert,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -46,11 +47,6 @@ const keySubtitles = {
   D: 'Gimnospermas',
 };
 
-/**
- * Adicione aqui as famílias que tiverem imagem.
- * O nome da chave deve bater com o resultado final da família
- * ou com a versão "limpa" sem o texto entre parênteses.
- */
 const familyImages = {
   Poaceae: require('./assets/familias/poaceae.png'),
   Moraceae: require('./assets/familias/moraceae.png'),
@@ -59,9 +55,46 @@ const familyImages = {
 
 function getFamilyImage(family) {
   if (!family) return null;
-
   const cleanFamily = family.split('(')[0].trim();
   return familyImages[family] || familyImages[cleanFamily] || null;
+}
+
+function LoadingScreen() {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top', 'right', 'bottom', 'left']}>
+      <StatusBar style="light" />
+      <View
+        style={[
+          styles.loadingScreen,
+          {
+            paddingTop: Math.max(insets.top, 8),
+            paddingBottom: Math.max(insets.bottom, 14),
+          },
+        ]}
+      >
+        <View style={styles.loadingContent}>
+          <Image
+            source={require('./assets/logo.png')}
+            style={styles.loadingLogo}
+            resizeMode="contain"
+          />
+
+          <Text style={styles.loadingTitle}>Chave de Identificação</Text>
+          <Text style={styles.loadingSubtitle}>
+            Angiospermas e gimnospermas nativas e cultivadas do Brasil
+          </Text>
+
+          <ActivityIndicator
+            size="large"
+            color="#ffffff"
+            style={styles.loadingSpinner}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
 }
 
 function HomeScreen({ navigation, normalizedKeys }) {
@@ -111,7 +144,7 @@ function HomeScreen({ navigation, normalizedKeys }) {
             />
             <Text style={styles.appTitle}>Chave de Identificação</Text>
             <Text style={styles.appSubtitle}>
-              Angiosperms e gimnospermas nativas e cultivadas do Brasil
+              Angiospermas e gimnospermas nativas e cultivadas do Brasil
             </Text>
           </View>
 
@@ -436,6 +469,24 @@ function RootNavigator() {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2200);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <SafeAreaProvider>
+        <LoadingScreen />
+      </SafeAreaProvider>
+    );
+  }
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>
@@ -454,6 +505,44 @@ const styles = StyleSheet.create({
   appFrame: {
     flex: 1,
     paddingHorizontal: 18,
+  },
+
+  loadingScreen: {
+    flex: 1,
+    backgroundColor: '#355e3b',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+
+  loadingContent: {
+    alignItems: 'center',
+  },
+
+  loadingLogo: {
+    width: 140,
+    height: 140,
+    marginBottom: 18,
+  },
+
+  loadingTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+
+  loadingSubtitle: {
+    fontSize: 15,
+    color: '#e6f1e8',
+    textAlign: 'center',
+    lineHeight: 22,
+    maxWidth: 320,
+  },
+
+  loadingSpinner: {
+    marginTop: 26,
   },
 
   homeScreen: {
