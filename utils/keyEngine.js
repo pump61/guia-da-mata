@@ -21,5 +21,5 @@ export function getItemById(keyData, itemId) {
 }
 
 export function isNodeDestination(destination) {
-  return typeof destination === 'string' && /^[A-D]\d+$/i.test(destination);
+  return typeof destination === 'string' && /^[A-Z]\d+$/i.test(destination);
 }
