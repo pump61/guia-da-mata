@@ -741,7 +741,6 @@ function ResultScreen({ navigation, route }) {
   const parentScreen = mode === 'dendro' ? 'Dendro' : (mode === 'insect' ? 'Insect' : 'Botanic');
 
   function goToKeySelection() { 
-    // Volta para a tela de seleção da chave específica
     navigation.popToTop();
     navigation.navigate(parentScreen);
   }
@@ -777,7 +776,11 @@ function ResultScreen({ navigation, route }) {
               <Text style={[styles.resultLabel, { color: theme.textMuted }]}>Resultado final</Text>
               {resultImage ? (
                 <View style={styles.imageContainer}>
-                  <Image source={resultImage} style={styles.resultImage} resizeMode="cover" />
+                  <Image 
+                    source={resultImage} 
+                    style={styles.resultImage} 
+                    resizeMode="stretch"
+                  />
                 </View>
               ) : null}
               <Text style={[styles.resultText, { color: theme.textPrimary, fontSize: 26 * fontScale }]}>{result}</Text>
@@ -991,8 +994,8 @@ const styles = StyleSheet.create({
   choiceText:      { lineHeight: 24, fontWeight: '300' },
   resultCard:      { borderRadius: 16, padding: 24, borderWidth: 1, marginBottom: 16, alignItems: 'center' },
   resultLabel:     { fontSize: 11, fontWeight: '500', marginBottom: 16, textAlign: 'center', textTransform: 'uppercase', letterSpacing: 1.2 },
-  imageContainer:  { alignItems: 'center', marginBottom: 16 },
-  resultImage:     { width: 280, height: 280, borderRadius: 12, opacity: 1 },
+  imageContainer:  { width: 280, height: 280, marginBottom: 16, justifyContent: 'center', alignItems: 'center' },
+  resultImage:     { width: '100%', height: '100%', borderRadius: 12 },
   resultText:      { fontWeight: '300', textAlign: 'center', letterSpacing: 0.4 },
   footerButtons:   { flexDirection: 'row', gap: 10, marginTop: 14 },
   secondaryButton:     { flex: 1, borderRadius: 12, borderWidth: 1, minHeight: 50, paddingHorizontal: 16, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' },

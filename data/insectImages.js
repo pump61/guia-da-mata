@@ -92,8 +92,33 @@ export const insectImages = {
 export function getInsectImage(order) {
   if (!order) return null;
   
-  // Normaliza o nome da ordem (remove hífens, upper case)
-  const normalized = order.replace(/-/g, '_').toUpperCase();
+  // Normaliza o nome da ordem para o formato da chave do objeto
+  let normalized = order
+    .toUpperCase()
+    .replace(/-/g, '_')           // substitui hífen por underline
+    .replace(/\(/g, '')           // remove parênteses de abertura
+    .replace(/\)/g, '')           // remove parênteses de fechamento
+    .replace(/\s+/g, '_')         // substitui espaços por underline
+    .replace(/__+/g, '_');        // remove underlines duplicados
+  
+  // Casos especiais
+  if (normalized.includes('PHTHIRAPTERA') && normalized.includes('ANOPLURA')) {
+    normalized = 'PHTHIRAPTERA_ANOPLURA';
+  }
+  if (normalized.includes('PHTHIRAPTERA') && normalized.includes('MALLOPHAGA')) {
+    normalized = 'PHTHIRAPTERA_MALLOPHAGA';
+  }
+  if (normalized.includes('HEMIPTERA') && normalized.includes('HOMOPTERA')) {
+    normalized = 'HEMIPTERA_HOMOPTERA';
+  }
+  if (normalized.includes('HEMIPTERA') && normalized.includes('HETEROPTERA')) {
+    normalized = 'HEMIPTERA_HETEROPTERA';
+  }
+  if (normalized.includes('BLATTODEA') && normalized.includes('ISOPTERA')) {
+    normalized = 'BLATTODEA_ISOPTERA';
+  }
+  
+  console.log('Buscando imagem para:', order, '→ normalizado:', normalized);
   
   // Tenta encontrar a imagem
   const image = insectImages[normalized];
@@ -102,6 +127,6 @@ export function getInsectImage(order) {
     return image;
   }
   
-  // Se não encontrar, retorna null (mostra só texto)
+  console.log('❌ Imagem não encontrada para:', normalized);
   return null;
 }
