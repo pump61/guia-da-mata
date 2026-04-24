@@ -1,4 +1,4 @@
-```markdown
+
 # 🌳 Guia da Mata
 
 Aplicativo profissional para identificação botânica, dendrológica, entomológica e diagnóstico do solo. Desenvolvido para estudantes e profissionais da Engenharia Florestal.
@@ -77,6 +77,5 @@ MIT
 ---
 
 <div align="center">
-  Feito com ❤️ para Engenharia Florestal
+  Feito com ❤️ para Engenharia Florestal!
 </div>
-```
