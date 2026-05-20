@@ -17,202 +17,161 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '../utils/theme';
-import { cultures, getFertilityClass, getFertilizerRecommendation } from '../data/agricultural/cultures';
+import { cultures, getFertilityClass, getAdubacaoValue, getFertilizerRecommendation } from '../data/agricultural/cultures';
 import { interpretarAluminio, interpretarV, calcularNecessidadeCalagem } from '../data/agricultural/soilAnalysis';
 import { sanitizarInput, validarNumero, LIMITES_SOLO, validarAnaliseSolo } from '../utils/security';
+
+const CATEGORIAS = [
+  'Cafeeiro',
+  'Fruteiras',
+  'Olerícolas',
+  'Forrageiras',
+  'Permanentes',
+  'Temporárias',
+  'Ornamentais',
+  'Florestais',
+];
+
+const TEXTURAS = [
+  { id: 'argilosa', label: 'Argilosa', hint: 'P-rem < 10' },
+  { id: 'media',    label: 'Média',    hint: 'P-rem 10–40' },
+  { id: 'arenosa',  label: 'Arenosa',  hint: 'P-rem > 40' },
+];
 
 export function AgriculturalScreen({ navigation }) {
   const insets = useSafeAreaInsets();
   const { theme, fontScale } = useTheme();
-  
+
   const inputRefs = {
-    pH: useRef(null),
-    P: useRef(null),
-    K: useRef(null),
-    Ca: useRef(null),
-    Mg: useRef(null),
-    Al: useRef(null),
-    V: useRef(null),
-    T: useRef(null),
+    pH: useRef(null), P: useRef(null), K: useRef(null), Ca: useRef(null),
+    Mg: useRef(null), Al: useRef(null), V: useRef(null), T: useRef(null),
   };
-  
-  const [culturaSelecionada, setCulturaSelecionada] = useState(null);
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [espacamentoLinha, setEspacamentoLinha] = useState('');
-  const [espacamentoPlanta, setEspacamentoPlanta] = useState('');
-  const [plantasPorHa, setPlantasPorHa] = useState(0);
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState('Florestais');
-  
+
+  const [culturaSelecionada,   setCulturaSelecionada]   = useState(null);
+  const [dropdownVisible,      setDropdownVisible]       = useState(false);
+  const [espacamentoLinha,     setEspacamentoLinha]      = useState('');
+  const [espacamentoPlanta,    setEspacamentoPlanta]     = useState('');
+  const [plantasPorHa,         setPlantasPorHa]          = useState(0);
+  const [categoriaSelecionada, setCategoriaSelecionada]  = useState('Fruteiras');
+  const [textura,              setTextura]               = useState('media');
+
   const [analise, setAnalise] = useState({
-    pH: '',
-    P: '',
-    K: '',
-    Ca: '',
-    Mg: '',
-    Al: '',
-    V: '',
-    T: '',
+    pH: '', P: '', K: '', Ca: '', Mg: '', Al: '', V: '', T: '',
   });
-  
+
   const [resultado, setResultado] = useState(null);
-  
-  const categorias = ['Florestais', 'Fruteiras', 'Grãos', 'Hortaliças'];
-  
+
   const culturasFiltradas = Object.values(cultures).filter(
     (c) => c.categoria === categoriaSelecionada
   );
-  
-  // Função segura para calcular plantas por hectare
+
+  // ── Espaçamento ──────────────────────────────────────────────────────────────
+
   const calcularPlantasPorHa = (linha, planta) => {
-    const linhaNum = parseFloat(String(linha).replace(',', '.'));
-    const plantaNum = parseFloat(String(planta).replace(',', '.'));
-    
-    if (isNaN(linhaNum) || isNaN(plantaNum)) return 0;
-    if (linhaNum <= 0 || plantaNum <= 0) return 0;
-    
-    const area = linhaNum * plantaNum;
-    const plantas = Math.round(10000 / area);
-    
-    // Limite máximo de 500.000 plantas/ha
-    return Math.min(plantas, 500000);
+    const l = parseFloat(String(linha).replace(',', '.'));
+    const p = parseFloat(String(planta).replace(',', '.'));
+    if (isNaN(l) || isNaN(p) || l <= 0 || p <= 0) return 0;
+    return Math.min(Math.round(10000 / (l * p)), 500000);
   };
-  
-  const atualizarPlantasPorHa = (linha, planta) => {
-    const plantas = calcularPlantasPorHa(linha, planta);
-    setPlantasPorHa(plantas);
-  };
-  
+
   const handleEspacamentoLinha = (text) => {
-    const sanitizado = sanitizarInput(text);
-    setEspacamentoLinha(sanitizado);
-    atualizarPlantasPorHa(sanitizado, espacamentoPlanta);
+    const s = sanitizarInput(text);
+    setEspacamentoLinha(s);
+    setPlantasPorHa(calcularPlantasPorHa(s, espacamentoPlanta));
   };
-  
+
   const handleEspacamentoPlanta = (text) => {
-    const sanitizado = sanitizarInput(text);
-    setEspacamentoPlanta(sanitizado);
-    atualizarPlantasPorHa(espacamentoLinha, sanitizado);
+    const s = sanitizarInput(text);
+    setEspacamentoPlanta(s);
+    setPlantasPorHa(calcularPlantasPorHa(espacamentoLinha, s));
   };
-  
-  // Handle seguro para os inputs de análise do solo
-  const handleAnaliseChange = (campo, valor, nextField) => {
-    // Sanitiza e valida o input
+
+  // ── Análise do solo ───────────────────────────────────────────────────────────
+
+  // Só sanitiza caracteres inválidos; não converte número para não quebrar "5." ao digitar
+  const handleAnaliseChange = (campo, valor) => {
     const sanitizado = sanitizarInput(valor);
-    
-    // Aplica limites do campo
-    const limite = LIMITES_SOLO[campo];
-    let valorFinal = sanitizado;
-    
-    if (limite && sanitizado !== '') {
-      const num = validarNumero(sanitizado, limite.min, limite.max);
-      if (num !== null) {
-        valorFinal = String(num);
-      }
-    }
-    
-    setAnalise({ ...analise, [campo]: valorFinal });
-    
-    // Move para próximo campo se existir
-    if (nextField && inputRefs[nextField]?.current) {
-      inputRefs[nextField].current.focus();
-    }
+    setAnalise((prev) => ({ ...prev, [campo]: sanitizado }));
   };
-  
+
+  // Foco avança para o próximo campo apenas ao pressionar Enter/Next
   const handleSubmitEditing = (currentField) => {
     const fields = ['pH', 'P', 'K', 'Ca', 'Mg', 'Al', 'V', 'T'];
-    const currentIndex = fields.indexOf(currentField);
-    if (currentIndex < fields.length - 1) {
-      const nextField = fields[currentIndex + 1];
-      inputRefs[nextField]?.current?.focus();
-    }
+    const idx = fields.indexOf(currentField);
+    if (idx < fields.length - 1) inputRefs[fields[idx + 1]]?.current?.focus();
   };
-  
-  function getAdubacaoValue(adubacaoObj, classe) {
-    if (!adubacaoObj || typeof adubacaoObj !== 'object') return 0;
-    const valor = adubacaoObj[classe];
-    return typeof valor === 'number' ? valor : 0;
-  }
-  
+
   function safeNumber(value, defaultValue = 0) {
     const num = parseFloat(String(value).replace(',', '.'));
     return isNaN(num) ? defaultValue : num;
   }
-  
+
+  // ── Cálculo ───────────────────────────────────────────────────────────────────
+
   function calcular() {
-    // Validações de segurança
-    if (!culturaSelecionada) {
-      Alert.alert('Atenção', 'Selecione uma cultura');
-      return;
-    }
-    
-    if (!espacamentoLinha || !espacamentoPlanta) {
-      Alert.alert('Atenção', 'Informe o espaçamento de plantio');
-      return;
-    }
-    
-    // Valida análise do solo
+    if (!culturaSelecionada) { Alert.alert('Atenção', 'Selecione uma cultura'); return; }
+    if (!espacamentoLinha || !espacamentoPlanta) { Alert.alert('Atenção', 'Informe o espaçamento de plantio'); return; }
+
     const erros = validarAnaliseSolo(analise);
-    if (erros.length > 0) {
-      Alert.alert('Erro na Análise', erros.join('\n'));
-      return;
-    }
-    
-    // Converte valores com segurança
-    const dadosAnalise = {
+    if (erros.length > 0) { Alert.alert('Erro na Análise', erros.join('\n')); return; }
+
+    const dados = {
       pH: safeNumber(analise.pH, 5.5),
-      P: safeNumber(analise.P, 0),
-      K: safeNumber(analise.K, 0),
+      P:  safeNumber(analise.P,  0),
+      K:  safeNumber(analise.K,  0),
       Ca: safeNumber(analise.Ca, 0),
       Mg: safeNumber(analise.Mg, 0),
       Al: safeNumber(analise.Al, 0),
-      V: safeNumber(analise.V, 0),
-      T: safeNumber(analise.T, 0),
+      V:  safeNumber(analise.V,  0),
+      T:  safeNumber(analise.T,  0),
     };
-    
-    // Extrai classes de fertilidade
-    const pClasse = getFertilityClass(dadosAnalise.P, 'fosforo');
-    const kClasse = getFertilityClass(dadosAnalise.K, 'potassio');
-    
+
+    const tipo = culturaSelecionada.tipo || 'perene';
+    const vIdeal = culturaSelecionada.vIdeal || 60;
+
+    // Classes de fertilidade (manual ES/BA 5ª aprox.)
+    const pClasse = getFertilityClass(dados.P, 'fosforo',   tipo, textura);
+    const kClasse = getFertilityClass(dados.K, 'potassio',  tipo, textura);
+
     // Interpretações
-    const interpretacaoAl = interpretarAluminio(dadosAnalise.Al);
-    const interpretacaoV = interpretarV(dadosAnalise.V, false);
-    
+    const interpretacaoAl = interpretarAluminio(dados.Al);
+    const interpretacaoV  = interpretarV(dados.V, vIdeal);
+
     // Calagem
     const precisaCalagem = interpretacaoV.calagemNecessaria || interpretacaoAl.calagemNecessaria;
-    const calagem = precisaCalagem 
-      ? calcularNecessidadeCalagem(dadosAnalise.V, dadosAnalise.T, culturaSelecionada.vIdeal || 60)
+    const calagem = precisaCalagem
+      ? calcularNecessidadeCalagem(dados.V, dados.T, vIdeal)
       : { doseRecomendada: 0, teorica: 0, corrigida: 0 };
-    
+
     // Gessagem
     const gessagem = {
-      necessaria: dadosAnalise.Al > 0.5,
-      dose: dadosAnalise.Al > 0.5 ? calagem.doseRecomendada * 0.3 : 0,
-      motivo: dadosAnalise.Al > 0.5 ? `Alto teor de Al³⁺ (${dadosAnalise.Al.toFixed(2)} cmolc/dm³)` : null
+      necessaria: dados.Al > 0.5,
+      dose: dados.Al > 0.5 ? calagem.doseRecomendada * 0.3 : 0,
+      motivo: dados.Al > 0.5 ? `Alto teor de Al³⁺ (${dados.Al.toFixed(2)} cmolc/dm³)` : null,
     };
-    
-    // Adubação
+
+    // Adubação: N fixo por cultura; P2O5 pela classe de P; K2O pela classe de K
     const adubacao = {
-      N: getAdubacaoValue(culturaSelecionada.adubacaoPlantio?.N, pClasse),
-      P2O5: getAdubacaoValue(culturaSelecionada.adubacaoPlantio?.P2O5, kClasse),
-      K2O: getAdubacaoValue(culturaSelecionada.adubacaoPlantio?.K2O, kClasse)
+      N:    getAdubacaoValue(culturaSelecionada.adubacaoPlantio?.N,    pClasse),
+      P2O5: getAdubacaoValue(culturaSelecionada.adubacaoPlantio?.P2O5, pClasse),
+      K2O:  getAdubacaoValue(culturaSelecionada.adubacaoPlantio?.K2O,  kClasse),
     };
-    
-    // Adubação por cova
+
     const plantasPorHaValido = plantasPorHa > 0 ? plantasPorHa : 1;
     const adubacaoCova = {
-      N: (adubacao.N / plantasPorHaValido) * 1000,
+      N:    (adubacao.N    / plantasPorHaValido) * 1000,
       P2O5: (adubacao.P2O5 / plantasPorHaValido) * 1000,
-      K2O: (adubacao.K2O / plantasPorHaValido) * 1000
+      K2O:  (adubacao.K2O  / plantasPorHaValido) * 1000,
     };
-    
-    // Recomendações de fertilizantes
+
     const recomendacaoFertilizantes = getFertilizerRecommendation(adubacao);
-    
+
     setResultado({
       cultura: culturaSelecionada,
-      espacamento: { linha: safeNumber(espacamentoLinha), planta: safeNumber(espacamentoPlanta) },
+      textura,
+      espacamento:  { linha: safeNumber(espacamentoLinha), planta: safeNumber(espacamentoPlanta) },
       plantasPorHa,
-      analise: dadosAnalise,
+      analise: dados,
       classes: { P: pClasse, K: kClasse },
       interpretacaoAl,
       interpretacaoV,
@@ -222,91 +181,80 @@ export function AgriculturalScreen({ navigation }) {
       adubacaoCova,
       recomendacaoFertilizantes,
       precisaCalagem,
-      precisaGessagem: gessagem.necessaria
+      precisaGessagem: gessagem.necessaria,
     });
   }
-  
+
+  // ── Compartilhar ──────────────────────────────────────────────────────────────
+
   async function compartilharRelatorio() {
     if (!resultado) return;
-    
+    const r = resultado;
+    const texturasLabel = { argilosa: 'Argilosa', media: 'Média', arenosa: 'Arenosa' };
     const relatorio = `
 RELATÓRIO DE RECOMENDAÇÃO AGRÍCOLA
 =====================================
 
-CULTURA: ${resultado.cultura.nome}
-Nome Científico: ${resultado.cultura.nomeCientifico}
-Categoria: ${resultado.cultura.categoria}
-Ciclo: ${resultado.cultura.ciclo}
-Espaçamento: ${resultado.espacamento.linha} x ${resultado.espacamento.planta} m
-Plantas por hectare: ${resultado.plantasPorHa}
+CULTURA: ${r.cultura.nome}
+Nome Científico: ${r.cultura.nomeCientifico}
+Categoria: ${r.cultura.categoria}
+Ciclo: ${r.cultura.ciclo}
+Textura do solo: ${texturasLabel[r.textura]}
+Espaçamento: ${r.espacamento.linha} x ${r.espacamento.planta} m
+Plantas por hectare: ${r.plantasPorHa}
 
 ANÁLISE DO SOLO:
-• pH: ${resultado.analise.pH.toFixed(2)}
-• P: ${resultado.analise.P.toFixed(1)} mg/dm³ (${resultado.classes.P})
-• K: ${resultado.analise.K.toFixed(1)} mg/dm³ (${resultado.classes.K})
-• Ca: ${resultado.analise.Ca.toFixed(2)} cmolc/dm³
-• Mg: ${resultado.analise.Mg.toFixed(2)} cmolc/dm³
-• Al: ${resultado.analise.Al.toFixed(2)} cmolc/dm³ (${resultado.interpretacaoAl.classe})
-• V: ${resultado.analise.V.toFixed(1)}% (${resultado.interpretacaoV.classe})
+• pH: ${r.analise.pH.toFixed(2)}
+• P: ${r.analise.P.toFixed(1)} mg/dm³ (${r.classes.P})
+• K: ${r.analise.K.toFixed(1)} mg/dm³ (${r.classes.K})
+• Ca: ${r.analise.Ca.toFixed(2)} cmolc/dm³
+• Mg: ${r.analise.Mg.toFixed(2)} cmolc/dm³
+• Al: ${r.analise.Al.toFixed(2)} cmolc/dm³ (${r.interpretacaoAl.classe})
+• V: ${r.analise.V.toFixed(1)}% (${r.interpretacaoV.classe}) — V ideal: ${r.cultura.vIdeal}%
 
 DIAGNÓSTICO:
-${resultado.precisaCalagem ? 'SIM' : 'NÃO'} - CALAGEM: ${resultado.precisaCalagem ? 'NECESSÁRIA' : 'DISPENSÁVEL'}
-${resultado.precisaGessagem ? 'SIM' : 'NÃO'} - GESSAGEM: ${resultado.precisaGessagem ? 'NECESSÁRIA' : 'DISPENSÁVEL'}
+${r.precisaCalagem   ? '✓ CALAGEM: NECESSÁRIA'    : '✗ CALAGEM: DISPENSÁVEL'}
+${r.precisaGessagem  ? '✓ GESSAGEM: NECESSÁRIA'   : '✗ GESSAGEM: DISPENSÁVEL'}
 
-${resultado.precisaCalagem && resultado.calagem.doseRecomendada > 0 ? `
-CALAGEM:
-Dose recomendada: ${resultado.calagem.doseRecomendada.toFixed(2)} t/ha
-` : ''}
-${resultado.precisaGessagem && resultado.gessagem.dose > 0 ? `
-GESSAGEM:
-Dose recomendada: ${resultado.gessagem.dose.toFixed(2)} t/ha
-Motivo: ${resultado.gessagem.motivo}
-` : ''}
+${r.precisaCalagem && r.calagem.doseRecomendada > 0 ? `CALAGEM:\nDose recomendada: ${r.calagem.doseRecomendada.toFixed(2)} t/ha\n` : ''}
+${r.precisaGessagem && r.gessagem.dose > 0 ? `GESSAGEM:\nDose recomendada: ${r.gessagem.dose.toFixed(2)} t/ha\nMotivo: ${r.gessagem.motivo}\n` : ''}
 
 ADUBAÇÃO POR HECTARE (kg/ha):
-N: ${resultado.adubacao.N} kg/ha
-P₂O₅: ${resultado.adubacao.P2O5} kg/ha
-K₂O: ${resultado.adubacao.K2O} kg/ha
+N: ${r.adubacao.N} | P₂O₅: ${r.adubacao.P2O5} | K₂O: ${r.adubacao.K2O}
 
-ADUBAÇÃO POR COVA (g/cova):
-N: ${resultado.adubacaoCova.N.toFixed(1)} g
-P₂O₅: ${resultado.adubacaoCova.P2O5.toFixed(1)} g
-K₂O: ${resultado.adubacaoCova.K2O.toFixed(1)} g
-
+ADUBAÇÃO POR COVA (g/cova) — ${r.plantasPorHa.toLocaleString('pt-BR')} plantas/ha:
+N: ${r.adubacaoCova.N.toFixed(1)} | P₂O₅: ${r.adubacaoCova.P2O5.toFixed(1)} | K₂O: ${r.adubacaoCova.K2O.toFixed(1)}
+${r.cultura.adubacaoCobertura ? `
+ADUBAÇÃO DE COBERTURA (kg/ha):
+${r.cultura.adubacaoCobertura.descricao}
+N: ${r.cultura.adubacaoCobertura.N} | K₂O: ${r.cultura.adubacaoCobertura.K2O}
+` : ''}
 RECOMENDAÇÃO DE FERTILIZANTES:
 Nitrogênio:
-${resultado.recomendacaoFertilizantes.nitrogenio.map(f => `• ${f.nome}: ${f.dose.toFixed(0)} kg/ha (${f.concentracao}% N) - ${f.vantagens}`).join('\n')}
+${r.recomendacaoFertilizantes.nitrogenio.map(f => `• ${f.nome}: ${f.dose.toFixed(0)} kg/ha — ${f.vantagens}`).join('\n')}
 
 Fósforo:
-${resultado.recomendacaoFertilizantes.fosforo.map(f => `• ${f.nome}: ${f.dose.toFixed(0)} kg/ha (${f.concentracao}% P₂O₅) - ${f.vantagens}`).join('\n')}
+${r.recomendacaoFertilizantes.fosforo.map(f => `• ${f.nome}: ${f.dose.toFixed(0)} kg/ha — ${f.vantagens}`).join('\n')}
 
 Potássio:
-${resultado.recomendacaoFertilizantes.potassio.map(f => `• ${f.nome}: ${f.dose.toFixed(0)} kg/ha (${f.concentracao}% K₂O) - ${f.vantagens}`).join('\n')}
+${r.recomendacaoFertilizantes.potassio.map(f => `• ${f.nome}: ${f.dose.toFixed(0)} kg/ha — ${f.vantagens}`).join('\n')}
 
-${resultado.cultura.adubacaoCobertura ? `
-ADUBAÇÃO DE COBERTURA:
-${resultado.cultura.adubacaoCobertura.descricao}
-` : ''}
-
-${resultado.cultura.observacoes ? `
-OBSERVAÇÕES:
-${resultado.cultura.observacoes}
-` : ''}
+${r.cultura.observacoes ? `OBSERVAÇÕES:\n${r.cultura.observacoes}` : ''}
 
 =====================================
-Relatório gerado por Guia Florestal
-    `;
-    
-    await Share.share({
-      message: relatorio,
-      title: 'Relatório de Recomendação Agrícola'
-    });
+Relatório gerado por Guia da Mata
+Ref.: Manual ES/BA — 5ª Aproximação
+    `.trim();
+
+    await Share.share({ message: relatorio, title: 'Relatório de Recomendação Agrícola' });
   }
-  
+
+  // ── Dropdown de culturas ──────────────────────────────────────────────────────
+
   const renderCulturaDropdown = () => (
     <Modal
       visible={dropdownVisible}
-      transparent={true}
+      transparent
       animationType="fade"
       onRequestClose={() => setDropdownVisible(false)}
     >
@@ -316,7 +264,9 @@ Relatório gerado por Guia Florestal
         onPress={() => setDropdownVisible(false)}
       >
         <View style={[styles.dropdownContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
-          <Text style={[styles.dropdownTitle, { color: theme.textPrimary }]}>Selecione a Cultura</Text>
+          <Text style={[styles.dropdownTitle, { color: theme.textPrimary }]}>
+            {categoriaSelecionada}
+          </Text>
           <FlatList
             data={culturasFiltradas}
             keyExtractor={(item) => item.id}
@@ -324,18 +274,13 @@ Relatório gerado por Guia Florestal
               <TouchableOpacity
                 style={[
                   styles.dropdownItem,
-                  { 
-                    backgroundColor: culturaSelecionada?.id === item.id ? theme.accent : theme.surface,
-                  }
+                  { backgroundColor: culturaSelecionada?.id === item.id ? theme.accent : theme.surface },
                 ]}
-                onPress={() => {
-                  setCulturaSelecionada(item);
-                  setDropdownVisible(false);
-                }}
+                onPress={() => { setCulturaSelecionada(item); setDropdownVisible(false); }}
               >
                 <Text style={[
                   styles.dropdownItemText,
-                  { color: culturaSelecionada?.id === item.id ? theme.accentText : theme.textPrimary }
+                  { color: culturaSelecionada?.id === item.id ? theme.accentText : theme.textPrimary },
                 ]}>
                   {item.nome}
                 </Text>
@@ -349,12 +294,33 @@ Relatório gerado por Guia Florestal
       </TouchableOpacity>
     </Modal>
   );
-  
+
+  // ── Campo de entrada ──────────────────────────────────────────────────────────
+
+  const renderInput = (campo, label, placeholder, nextField) => (
+    <View style={styles.halfInput}>
+      <Text style={[styles.label, { color: theme.textSecondary }]}>{label}</Text>
+      <TextInput
+        ref={inputRefs[campo]}
+        style={[styles.input, { backgroundColor: theme.surface, borderColor: theme.border, color: theme.textPrimary }]}
+        keyboardType="decimal-pad"
+        value={analise[campo]}
+        onChangeText={(v) => handleAnaliseChange(campo, v)}
+        onSubmitEditing={() => nextField ? handleSubmitEditing(campo) : calcular()}
+        placeholder={placeholder}
+        placeholderTextColor={theme.textMuted}
+        returnKeyType={nextField ? 'next' : 'done'}
+      />
+    </View>
+  );
+
+  // ── Render principal ──────────────────────────────────────────────────────────
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar style={theme.name === 'Ink' ? 'light' : 'dark'} />
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
@@ -373,40 +339,35 @@ Relatório gerado por Guia Florestal
           <Text style={[styles.subtitle, { color: theme.textSecondary, fontSize: 14 * fontScale }]}>
             Recomendação de calagem, gessagem e adubação
           </Text>
-          
-          {/* Categorias - Centralizadas */}
+
+          {/* Categorias */}
           <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border }]}>
             <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>Categoria</Text>
-            <View style={styles.categoriaContainer}>
-              <View style={styles.categoriaGrid}>
-                {categorias.map((cat) => (
-                  <TouchableOpacity
-                    key={cat}
-                    style={[
-                      styles.categoriaButton,
-                      { 
-                        backgroundColor: categoriaSelecionada === cat ? theme.accent : theme.surface,
-                        borderColor: theme.border,
-                      }
-                    ]}
-                    onPress={() => {
-                      setCategoriaSelecionada(cat);
-                      setCulturaSelecionada(null);
-                    }}
-                  >
-                    <Text style={[
-                      styles.categoriaButtonText,
-                      { color: categoriaSelecionada === cat ? theme.accentText : theme.textPrimary }
-                    ]}>
-                      {cat}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+            <View style={styles.categoriaGrid}>
+              {CATEGORIAS.map((cat) => (
+                <TouchableOpacity
+                  key={cat}
+                  style={[
+                    styles.categoriaButton,
+                    {
+                      backgroundColor: categoriaSelecionada === cat ? theme.accent : theme.surface,
+                      borderColor: theme.border,
+                    },
+                  ]}
+                  onPress={() => { setCategoriaSelecionada(cat); setCulturaSelecionada(null); }}
+                >
+                  <Text style={[
+                    styles.categoriaButtonText,
+                    { color: categoriaSelecionada === cat ? theme.accentText : theme.textPrimary },
+                  ]}>
+                    {cat}
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </View>
           </View>
-          
-          {/* Seleção da Cultura - Dropdown */}
+
+          {/* Seleção da Cultura */}
           <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border }]}>
             <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>Cultura</Text>
             <TouchableOpacity
@@ -420,11 +381,11 @@ Relatório gerado por Guia Florestal
             </TouchableOpacity>
             {culturaSelecionada && (
               <Text style={[styles.culturaInfo, { color: theme.textSecondary }]}>
-                {culturaSelecionada.nomeCientifico} • {culturaSelecionada.ciclo}
+                {culturaSelecionada.nomeCientifico} • {culturaSelecionada.ciclo} • V ideal: {culturaSelecionada.vIdeal}%
               </Text>
             )}
           </View>
-          
+
           {/* Espaçamento */}
           <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border }]}>
             <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>Espaçamento (metros)</Text>
@@ -460,225 +421,180 @@ Relatório gerado por Guia Florestal
               </Text>
             )}
           </View>
-          
+
           {/* Análise do Solo */}
           <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border }]}>
             <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>Análise do Solo</Text>
-            
-            <View style={styles.row}>
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: theme.textSecondary }]}>pH</Text>
-                <TextInput
-                  ref={inputRefs.pH}
-                  style={[styles.input, { backgroundColor: theme.surface, borderColor: theme.border, color: theme.textPrimary }]}
-                  keyboardType="numeric"
-                  value={analise.pH}
-                  onChangeText={(v) => handleAnaliseChange('pH', v, 'P')}
-                  onSubmitEditing={() => handleSubmitEditing('pH')}
-                  placeholder="Ex: 5.1"
-                  placeholderTextColor={theme.textMuted}
-                  returnKeyType="next"
-                />
-              </View>
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: theme.textSecondary }]}>P (mg/dm³)</Text>
-                <TextInput
-                  ref={inputRefs.P}
-                  style={[styles.input, { backgroundColor: theme.surface, borderColor: theme.border, color: theme.textPrimary }]}
-                  keyboardType="numeric"
-                  value={analise.P}
-                  onChangeText={(v) => handleAnaliseChange('P', v, 'K')}
-                  onSubmitEditing={() => handleSubmitEditing('P')}
-                  placeholder="Ex: 8"
-                  placeholderTextColor={theme.textMuted}
-                  returnKeyType="next"
-                />
-              </View>
+
+            {/* Textura */}
+            <Text style={[styles.sectionSubtitle, { color: theme.textSecondary }]}>Textura do solo</Text>
+            <View style={styles.texturaRow}>
+              {TEXTURAS.map((t) => (
+                <TouchableOpacity
+                  key={t.id}
+                  style={[
+                    styles.texturaButton,
+                    {
+                      backgroundColor: textura === t.id ? theme.accent : theme.surface,
+                      borderColor: theme.border,
+                    },
+                  ]}
+                  onPress={() => setTextura(t.id)}
+                >
+                  <Text style={[
+                    styles.texturaLabel,
+                    { color: textura === t.id ? theme.accentText : theme.textPrimary },
+                  ]}>
+                    {t.label}
+                  </Text>
+                  <Text style={[styles.texturaHint, { color: textura === t.id ? theme.accentText : theme.textMuted }]}>
+                    {t.hint}
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </View>
-            
+
+            {/* Campos da análise */}
+            <View style={[styles.divider, { backgroundColor: theme.border }]} />
+
             <View style={styles.row}>
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: theme.textSecondary }]}>K (mg/dm³)</Text>
-                <TextInput
-                  ref={inputRefs.K}
-                  style={[styles.input, { backgroundColor: theme.surface, borderColor: theme.border, color: theme.textPrimary }]}
-                  keyboardType="numeric"
-                  value={analise.K}
-                  onChangeText={(v) => handleAnaliseChange('K', v, 'Ca')}
-                  onSubmitEditing={() => handleSubmitEditing('K')}
-                  placeholder="Ex: 73"
-                  placeholderTextColor={theme.textMuted}
-                  returnKeyType="next"
-                />
-              </View>
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: theme.textSecondary }]}>Ca (cmolc/dm³)</Text>
-                <TextInput
-                  ref={inputRefs.Ca}
-                  style={[styles.input, { backgroundColor: theme.surface, borderColor: theme.border, color: theme.textPrimary }]}
-                  keyboardType="numeric"
-                  value={analise.Ca}
-                  onChangeText={(v) => handleAnaliseChange('Ca', v, 'Mg')}
-                  onSubmitEditing={() => handleSubmitEditing('Ca')}
-                  placeholder="Ex: 1.2"
-                  placeholderTextColor={theme.textMuted}
-                  returnKeyType="next"
-                />
-              </View>
+              {renderInput('pH', 'pH',          'Ex: 5.1', 'P')}
+              {renderInput('P',  'P (mg/dm³)',  'Ex: 8',   'K')}
             </View>
-            
             <View style={styles.row}>
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: theme.textSecondary }]}>Mg (cmolc/dm³)</Text>
-                <TextInput
-                  ref={inputRefs.Mg}
-                  style={[styles.input, { backgroundColor: theme.surface, borderColor: theme.border, color: theme.textPrimary }]}
-                  keyboardType="numeric"
-                  value={analise.Mg}
-                  onChangeText={(v) => handleAnaliseChange('Mg', v, 'Al')}
-                  onSubmitEditing={() => handleSubmitEditing('Mg')}
-                  placeholder="Ex: 0.6"
-                  placeholderTextColor={theme.textMuted}
-                  returnKeyType="next"
-                />
-              </View>
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: theme.textSecondary }]}>Al (cmolc/dm³)</Text>
-                <TextInput
-                  ref={inputRefs.Al}
-                  style={[styles.input, { backgroundColor: theme.surface, borderColor: theme.border, color: theme.textPrimary }]}
-                  keyboardType="numeric"
-                  value={analise.Al}
-                  onChangeText={(v) => handleAnaliseChange('Al', v, 'V')}
-                  onSubmitEditing={() => handleSubmitEditing('Al')}
-                  placeholder="Ex: 1.1"
-                  placeholderTextColor={theme.textMuted}
-                  returnKeyType="next"
-                />
-              </View>
+              {renderInput('K',  'K (mg/dm³)',  'Ex: 73',  'Ca')}
+              {renderInput('Ca', 'Ca (cmolc)',  'Ex: 1.2', 'Mg')}
             </View>
-            
             <View style={styles.row}>
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: theme.textSecondary }]}>V (%)</Text>
-                <TextInput
-                  ref={inputRefs.V}
-                  style={[styles.input, { backgroundColor: theme.surface, borderColor: theme.border, color: theme.textPrimary }]}
-                  keyboardType="numeric"
-                  value={analise.V}
-                  onChangeText={(v) => handleAnaliseChange('V', v, 'T')}
-                  onSubmitEditing={() => handleSubmitEditing('V')}
-                  placeholder="Ex: 28"
-                  placeholderTextColor={theme.textMuted}
-                  returnKeyType="next"
-                />
-              </View>
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: theme.textSecondary }]}>T (cmolc/dm³)</Text>
-                <TextInput
-                  ref={inputRefs.T}
-                  style={[styles.input, { backgroundColor: theme.surface, borderColor: theme.border, color: theme.textPrimary }]}
-                  keyboardType="numeric"
-                  value={analise.T}
-                  onChangeText={(v) => handleAnaliseChange('T', v, null)}
-                  onSubmitEditing={() => calcular()}
-                  placeholder="Ex: 7.1"
-                  placeholderTextColor={theme.textMuted}
-                  returnKeyType="done"
-                />
-              </View>
+              {renderInput('Mg', 'Mg (cmolc)',  'Ex: 0.6', 'Al')}
+              {renderInput('Al', 'Al (cmolc)',  'Ex: 1.1', 'V')}
             </View>
-            
+            <View style={styles.row}>
+              {renderInput('V',  'V (%)',       'Ex: 28',  'T')}
+              {renderInput('T',  'T (cmolc)',   'Ex: 7.1', null)}
+            </View>
+
             <TouchableOpacity
               style={[styles.calcButton, { backgroundColor: theme.accent }]}
               onPress={calcular}
             >
-              <Text style={[styles.calcButtonText, { color: theme.accentText }]}>
-                CALCULAR
-              </Text>
+              <Text style={[styles.calcButtonText, { color: theme.accentText }]}>CALCULAR</Text>
             </TouchableOpacity>
           </View>
-          
+
           {/* Resultado */}
           {resultado && (
             <View style={[styles.resultCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
-              <Text style={[styles.resultTitle, { color: theme.accent }]}>
-                RELATÓRIO DE RECOMENDAÇÃO
+              <Text style={[styles.resultTitle, { color: theme.accent }]}>RELATÓRIO DE RECOMENDAÇÃO</Text>
+              <Text style={[styles.resultSubtitle, { color: theme.textMuted }]}>
+                {resultado.cultura.nome} • Solo {({ argilosa: 'Argiloso', media: 'Médio', arenosa: 'Arenoso' })[resultado.textura]}
               </Text>
-              
-              <View style={styles.resultSection}>
+
+              {/* Diagnóstico */}
+              <View style={[styles.resultSection, { borderBottomColor: theme.border }]}>
                 <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Diagnóstico</Text>
                 <View style={styles.diagnosticoRow}>
                   <Text style={[styles.diagnosticoLabel, { color: theme.textMuted }]}>Calagem:</Text>
-                  <Text style={{ color: resultado.precisaCalagem ? '#E53935' : '#4CAF50' }}>
+                  <Text style={{ color: resultado.precisaCalagem ? '#E53935' : '#4CAF50', fontWeight: '600' }}>
                     {resultado.precisaCalagem ? 'NECESSÁRIA' : 'DISPENSÁVEL'}
                   </Text>
                 </View>
                 <View style={styles.diagnosticoRow}>
                   <Text style={[styles.diagnosticoLabel, { color: theme.textMuted }]}>Gessagem:</Text>
-                  <Text style={{ color: resultado.precisaGessagem ? '#E53935' : '#4CAF50' }}>
+                  <Text style={{ color: resultado.precisaGessagem ? '#E53935' : '#4CAF50', fontWeight: '600' }}>
                     {resultado.precisaGessagem ? 'NECESSÁRIA' : 'DISPENSÁVEL'}
                   </Text>
                 </View>
+                <View style={styles.diagnosticoRow}>
+                  <Text style={[styles.diagnosticoLabel, { color: theme.textMuted }]}>V atual / V ideal:</Text>
+                  <Text style={{ color: theme.textPrimary, fontWeight: '500' }}>
+                    {resultado.analise.V.toFixed(1)}% / {resultado.cultura.vIdeal}%
+                  </Text>
+                </View>
+                <View style={styles.diagnosticoRow}>
+                  <Text style={[styles.diagnosticoLabel, { color: theme.textMuted }]}>Classe P / K:</Text>
+                  <Text style={{ color: theme.textPrimary, fontWeight: '500' }}>
+                    {resultado.classes.P} / {resultado.classes.K}
+                  </Text>
+                </View>
               </View>
-              
+
+              {/* Calagem */}
               {resultado.precisaCalagem && resultado.calagem.doseRecomendada > 0 && (
-                <View style={styles.resultSection}>
+                <View style={[styles.resultSection, { borderBottomColor: theme.border }]}>
                   <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Calagem</Text>
                   <Text style={[styles.resultValue, { color: theme.textPrimary }]}>
                     {resultado.calagem.doseRecomendada.toFixed(2)} t/ha
                   </Text>
+                  <Text style={[styles.resultHint, { color: theme.textMuted }]}>PRNT 100% • método V%</Text>
                 </View>
               )}
-              
+
+              {/* Gessagem */}
               {resultado.precisaGessagem && resultado.gessagem.dose > 0 && (
-                <View style={styles.resultSection}>
+                <View style={[styles.resultSection, { borderBottomColor: theme.border }]}>
                   <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Gessagem</Text>
                   <Text style={[styles.resultValue, { color: theme.textPrimary }]}>
                     {resultado.gessagem.dose.toFixed(2)} t/ha
                   </Text>
+                  <Text style={[styles.resultHint, { color: theme.textMuted }]}>{resultado.gessagem.motivo}</Text>
                 </View>
               )}
-              
-              <View style={styles.resultSection}>
+
+              {/* Adubação por hectare */}
+              <View style={[styles.resultSection, { borderBottomColor: theme.border }]}>
                 <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Adubação por Hectare (kg/ha)</Text>
                 <View style={styles.npkRow}>
-                  <View style={styles.npkItem}>
-                    <Text style={[styles.npkLabel, { color: theme.accent }]}>N</Text>
-                    <Text style={[styles.npkValue, { color: theme.textPrimary }]}>{resultado.adubacao.N}</Text>
-                  </View>
-                  <View style={styles.npkItem}>
-                    <Text style={[styles.npkLabel, { color: theme.accent }]}>P₂O₅</Text>
-                    <Text style={[styles.npkValue, { color: theme.textPrimary }]}>{resultado.adubacao.P2O5}</Text>
-                  </View>
-                  <View style={styles.npkItem}>
-                    <Text style={[styles.npkLabel, { color: theme.accent }]}>K₂O</Text>
-                    <Text style={[styles.npkValue, { color: theme.textPrimary }]}>{resultado.adubacao.K2O}</Text>
-                  </View>
+                  {[['N', resultado.adubacao.N], ['P₂O₅', resultado.adubacao.P2O5], ['K₂O', resultado.adubacao.K2O]].map(([label, val]) => (
+                    <View key={label} style={styles.npkItem}>
+                      <Text style={[styles.npkLabel, { color: theme.accent }]}>{label}</Text>
+                      <Text style={[styles.npkValue, { color: theme.textPrimary }]}>{val}</Text>
+                    </View>
+                  ))}
                 </View>
               </View>
-              
-              <View style={styles.resultSection}>
+
+              {/* Adubação por cova */}
+              <View style={[styles.resultSection, { borderBottomColor: theme.border }]}>
                 <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Adubação por Cova (g/cova)</Text>
-                <Text style={[styles.infoText, { color: theme.textMuted, fontSize: 12 }]}>
+                <Text style={[styles.resultHint, { color: theme.textMuted }]}>
                   {resultado.plantasPorHa.toLocaleString('pt-BR')} plantas/ha
                 </Text>
                 <View style={styles.npkRow}>
-                  <View style={styles.npkItem}>
-                    <Text style={[styles.npkLabel, { color: theme.accent }]}>N</Text>
-                    <Text style={[styles.npkValue, { color: theme.textPrimary }]}>{resultado.adubacaoCova.N.toFixed(1)}</Text>
-                  </View>
-                  <View style={styles.npkItem}>
-                    <Text style={[styles.npkLabel, { color: theme.accent }]}>P₂O₅</Text>
-                    <Text style={[styles.npkValue, { color: theme.textPrimary }]}>{resultado.adubacaoCova.P2O5.toFixed(1)}</Text>
-                  </View>
-                  <View style={styles.npkItem}>
-                    <Text style={[styles.npkLabel, { color: theme.accent }]}>K₂O</Text>
-                    <Text style={[styles.npkValue, { color: theme.textPrimary }]}>{resultado.adubacaoCova.K2O.toFixed(1)}</Text>
-                  </View>
+                  {[['N', resultado.adubacaoCova.N], ['P₂O₅', resultado.adubacaoCova.P2O5], ['K₂O', resultado.adubacaoCova.K2O]].map(([label, val]) => (
+                    <View key={label} style={styles.npkItem}>
+                      <Text style={[styles.npkLabel, { color: theme.accent }]}>{label}</Text>
+                      <Text style={[styles.npkValue, { color: theme.textPrimary }]}>{val.toFixed(1)}</Text>
+                    </View>
+                  ))}
                 </View>
               </View>
-              
+
+              {/* Adubação de cobertura */}
+              {resultado.cultura.adubacaoCobertura && (
+                <View style={[styles.resultSection, { borderBottomColor: theme.border }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Adubação de Cobertura (kg/ha)</Text>
+                  <Text style={[styles.resultHint, { color: theme.textMuted }]}>
+                    {resultado.cultura.adubacaoCobertura.descricao}
+                  </Text>
+                  <View style={styles.npkRow}>
+                    {resultado.cultura.adubacaoCobertura.N > 0 && (
+                      <View style={styles.npkItem}>
+                        <Text style={[styles.npkLabel, { color: theme.accent }]}>N</Text>
+                        <Text style={[styles.npkValue, { color: theme.textPrimary }]}>{resultado.cultura.adubacaoCobertura.N}</Text>
+                      </View>
+                    )}
+                    {resultado.cultura.adubacaoCobertura.K2O > 0 && (
+                      <View style={styles.npkItem}>
+                        <Text style={[styles.npkLabel, { color: theme.accent }]}>K₂O</Text>
+                        <Text style={[styles.npkValue, { color: theme.textPrimary }]}>{resultado.cultura.adubacaoCobertura.K2O}</Text>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              )}
+
+              {/* Botões */}
               <View style={styles.actionButtons}>
                 <TouchableOpacity
                   style={[styles.shareButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
@@ -704,53 +620,60 @@ Relatório gerado por Guia Florestal
           )}
         </ScrollView>
       </KeyboardAvoidingView>
-      
+
       {renderCulturaDropdown()}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  title: { fontWeight: '600', marginBottom: 4 },
-  subtitle: { marginBottom: 20, opacity: 0.7 },
-  card: { borderRadius: 16, borderWidth: 1, padding: 18, marginBottom: 16 },
-  cardTitle: { fontWeight: '600', marginBottom: 12, fontSize: 16 },
-  categoriaContainer: { alignItems: 'center' },
-  categoriaGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 8 },
-  categoriaButton: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, borderWidth: 1, alignItems: 'center', minWidth: 90 },
-  categoriaButtonText: { fontWeight: '500', fontSize: 14 },
-  dropdownButton: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderWidth: 1, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 14 },
-  dropdownButtonText: { fontSize: 15 },
-  dropdownArrow: { fontSize: 14 },
-  culturaInfo: { fontSize: 12, marginTop: 8, textAlign: 'center', fontStyle: 'italic' },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
-  dropdownContainer: { width: '85%', maxHeight: '70%', borderRadius: 16, borderWidth: 1, overflow: 'hidden' },
-  dropdownTitle: { fontSize: 18, fontWeight: '600', padding: 16, textAlign: 'center', borderBottomWidth: 0.5, borderBottomColor: '#ccc' },
-  dropdownItem: { padding: 14, borderBottomWidth: 0.5, borderBottomColor: '#ccc' },
-  dropdownItemText: { fontSize: 15, fontWeight: '500' },
+  container:           { flex: 1 },
+  title:               { fontWeight: '600', marginBottom: 4 },
+  subtitle:            { marginBottom: 20, opacity: 0.7 },
+  card:                { borderRadius: 16, borderWidth: 1, padding: 18, marginBottom: 16 },
+  cardTitle:           { fontWeight: '600', marginBottom: 12, fontSize: 16 },
+  sectionSubtitle:     { fontSize: 13, fontWeight: '500', marginBottom: 8 },
+  categoriaGrid:       { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  categoriaButton:     { paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10, borderWidth: 1, alignItems: 'center' },
+  categoriaButtonText: { fontWeight: '500', fontSize: 13 },
+  dropdownButton:      { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderWidth: 1, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 14 },
+  dropdownButtonText:  { fontSize: 15 },
+  dropdownArrow:       { fontSize: 14 },
+  culturaInfo:         { fontSize: 12, marginTop: 8, textAlign: 'center', fontStyle: 'italic' },
+  modalOverlay:        { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  dropdownContainer:   { width: '85%', maxHeight: '70%', borderRadius: 16, borderWidth: 1, overflow: 'hidden' },
+  dropdownTitle:       { fontSize: 18, fontWeight: '600', padding: 16, textAlign: 'center', borderBottomWidth: 0.5, borderBottomColor: '#ccc' },
+  dropdownItem:        { padding: 14, borderBottomWidth: 0.5, borderBottomColor: '#ccc' },
+  dropdownItemText:    { fontSize: 15, fontWeight: '500' },
   dropdownItemSubtext: { fontSize: 11, marginTop: 2 },
-  row: { flexDirection: 'row', gap: 12, marginBottom: 12 },
-  halfInput: { flex: 1 },
-  label: { fontSize: 12, marginBottom: 4 },
-  input: { borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14 },
-  infoText: { textAlign: 'center', marginTop: 8, fontSize: 12, fontWeight: '500' },
-  calcButton: { borderRadius: 14, paddingVertical: 16, alignItems: 'center', marginTop: 8 },
-  calcButtonText: { fontWeight: '700', fontSize: 16 },
-  resultCard: { borderRadius: 16, borderWidth: 1, padding: 18, marginTop: 16, marginBottom: 32 },
-  resultTitle: { fontWeight: '700', textAlign: 'center', marginBottom: 16, fontSize: 18 },
-  resultSection: { marginBottom: 16, paddingBottom: 12, borderBottomWidth: 0.5, borderBottomColor: '#ccc', opacity: 0.8 },
-  sectionTitle: { fontWeight: '600', marginBottom: 10, fontSize: 14 },
-  diagnosticoRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  diagnosticoLabel: { fontSize: 13 },
-  resultValue: { fontWeight: '600', fontSize: 16, textAlign: 'center' },
-  npkRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 8 },
-  npkItem: { alignItems: 'center', flex: 1 },
-  npkLabel: { fontSize: 16, fontWeight: '700', marginBottom: 6 },
-  npkValue: { fontSize: 20, fontWeight: '600' },
-  actionButtons: { flexDirection: 'row', gap: 12, marginTop: 8 },
-  shareButton: { flex: 1, borderRadius: 12, borderWidth: 1, paddingVertical: 12, alignItems: 'center' },
-  shareButtonText: { fontWeight: '500', fontSize: 14 },
-  newButton: { flex: 1, borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
-  newButtonText: { fontWeight: '600', fontSize: 14 },
+  texturaRow:          { flexDirection: 'row', gap: 8, marginBottom: 12 },
+  texturaButton:       { flex: 1, borderRadius: 10, borderWidth: 1, paddingVertical: 10, alignItems: 'center' },
+  texturaLabel:        { fontWeight: '600', fontSize: 13 },
+  texturaHint:         { fontSize: 10, marginTop: 2 },
+  divider:             { height: 1, marginVertical: 14 },
+  row:                 { flexDirection: 'row', gap: 12, marginBottom: 12 },
+  halfInput:           { flex: 1 },
+  label:               { fontSize: 12, marginBottom: 4 },
+  input:               { borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14 },
+  infoText:            { textAlign: 'center', marginTop: 8, fontSize: 12, fontWeight: '500' },
+  calcButton:          { borderRadius: 14, paddingVertical: 16, alignItems: 'center', marginTop: 8 },
+  calcButtonText:      { fontWeight: '700', fontSize: 16 },
+  resultCard:          { borderRadius: 16, borderWidth: 1, padding: 18, marginTop: 16, marginBottom: 32 },
+  resultTitle:         { fontWeight: '700', textAlign: 'center', marginBottom: 4, fontSize: 18 },
+  resultSubtitle:      { textAlign: 'center', marginBottom: 16, fontSize: 12 },
+  resultSection:       { marginBottom: 16, paddingBottom: 12, borderBottomWidth: 0.5 },
+  sectionTitle:        { fontWeight: '600', marginBottom: 10, fontSize: 14 },
+  diagnosticoRow:      { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
+  diagnosticoLabel:    { fontSize: 13 },
+  resultValue:         { fontWeight: '600', fontSize: 20, textAlign: 'center' },
+  resultHint:          { fontSize: 11, textAlign: 'center', marginTop: 4 },
+  npkRow:              { flexDirection: 'row', justifyContent: 'space-around', marginTop: 8 },
+  npkItem:             { alignItems: 'center', flex: 1 },
+  npkLabel:            { fontSize: 16, fontWeight: '700', marginBottom: 6 },
+  npkValue:            { fontSize: 20, fontWeight: '600' },
+  actionButtons:       { flexDirection: 'row', gap: 12, marginTop: 8 },
+  shareButton:         { flex: 1, borderRadius: 12, borderWidth: 1, paddingVertical: 12, alignItems: 'center' },
+  shareButtonText:     { fontWeight: '500', fontSize: 14 },
+  newButton:           { flex: 1, borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
+  newButtonText:       { fontWeight: '600', fontSize: 14 },
 });
