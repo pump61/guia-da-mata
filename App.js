@@ -36,6 +36,7 @@ import SplashScreen from './SplashScreen';
 import { normalizeKeyData, getItemById, isNodeDestination } from './utils/keyEngine';
 import { ThemeProvider, useTheme } from './utils/theme';
 import { AgriculturalScreen } from './screens/AgriculturalScreen';
+import { WoodAnatomyScreen } from './screens/WoodAnatomyScreen';
 
 // Suprime o warning do NavigationBar no Expo Go
 const originalWarn = console.warn;
@@ -348,6 +349,7 @@ const mainCategories = [
   { id: 'dendrologico', label: 'Chaveamento Dendrológico', subtitle: 'Identificação de espécies arbóreas', route: 'Dendro',  available: true  },
   { id: 'entomologico', label: 'Chaveamento Entomológico', subtitle: 'Identificação de ordens de insetos', route: 'Insect',  available: true  },
   { id: 'agrario',      label: 'Diagnóstico de Solo',      subtitle: 'Recomendação de calagem, gessagem e adubação', route: 'Agricultural', available: true  },
+  { id: 'madeira',      label: 'Anatomia de Madeira',      subtitle: 'Detecção de lúmens e vasos por microscopia',   route: 'WoodAnatomy',  available: true  },
 ];
 
 function MainScreen({ navigation }) {
@@ -860,6 +862,7 @@ function RootNavigator() {
           {(props) => <InsectScreen {...props} normalizedInsectKeys={normalizedInsectKeys} />}
         </Stack.Screen>
         <Stack.Screen name="Agricultural" component={AgriculturalScreen} />
+        <Stack.Screen name="WoodAnatomy" component={WoodAnatomyScreen} />
         <Stack.Screen name="Flow">
           {(props) => <FlowScreen {...props} 
             normalizedBotanicKeys={normalizedBotanicKeys} 

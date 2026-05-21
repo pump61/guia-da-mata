@@ -6,6 +6,20 @@
     "icon": "./assets/icon.png",
     "plugins": [
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permite ao Guia da Mata acessar suas fotos para análise anatômica de madeira."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Permite ao Guia da Mata salvar imagens analisadas na sua galeria.",
+          "savePhotosPermission": "Permite ao Guia da Mata salvar imagens na galeria.",
+          "isAccessMediaLocationEnabled": false
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#F5F2ED",
